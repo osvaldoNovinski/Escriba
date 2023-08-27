@@ -1,0 +1,5 @@
+package com.osvaldo.rest;
+
+public class CartorioController {
+
+}

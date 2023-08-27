@@ -1,0 +1,92 @@
+package com.osvaldo.service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.osvaldo.dao.AtribuicaoCartorioRepository;
+import com.osvaldo.dto.AtribuicaoCartorioDTO;
+import com.osvaldo.dto.QueryParams;
+import com.osvaldo.dto.QueryResults;
+import com.osvaldo.entity.AtribuicaoCartorio;
+import com.osvaldo.exception.ServiceException;
+import org.springframework.data.domain.Sort;
+
+@Service
+public class AtribuicaoCartorioService {
+
+	@Autowired
+	private AtribuicaoCartorioRepository repository;
+
+	@Transactional(readOnly = true)
+	public QueryResults listar(QueryParams queryParams) {
+
+		PageRequest pageRequest = PageRequest.of(queryParams.getPageNumber(), queryParams.getPageSize(),
+				Sort.Direction.valueOf(queryParams.getSortOrder().toUpperCase()),
+				queryParams.getSortField().isEmpty() ? "nome" : queryParams.getSortField());
+
+		Page<AtribuicaoCartorio> atribuicaoCartorioPage = repository.listar(queryParams.getFilter(), pageRequest);
+
+		List<AtribuicaoCartorioDTO> atribuicaoCartorioList = atribuicaoCartorioPage.getContent().stream()
+				.map(c -> c.toDto(c)).collect(Collectors.toList());
+
+		return new QueryResults(atribuicaoCartorioList, atribuicaoCartorioPage.getTotalElements());
+	}
+
+	public AtribuicaoCartorioDTO save(AtribuicaoCartorioDTO dto) {
+
+		// Verifica se já existe uma atribuição cadastrada com o mesmo nome.
+		if (repository.findByNome(dto.getNome()).isPresent()) {
+			throw new ServiceException(HttpStatus.BAD_REQUEST,
+					"Já existe uma atribuição cadastrada com esse nome: " + dto.getNome());
+		}
+
+		// Converte o objeto CompetenciaDTO para uma entidade Competencia.
+		AtribuicaoCartorio entity = dto.toEntity(dto);
+
+		// Salva a competência no repositório.
+		repository.save(entity);
+
+		// Retorna a competência salva, convertida novamente para um objeto
+		// CompetenciaDTO.
+		return entity.toDto(entity);
+	}
+
+	@Transactional
+	public AtribuicaoCartorioDTO update(String idAtribuicao, AtribuicaoCartorioDTO dto) throws ServiceException {
+		try {
+			// Obtém a entidade Competencia correspondente ao código de identificação
+			// fornecido.
+			AtribuicaoCartorio entity = repository.findById(idAtribuicao).get();
+
+			// Verifica se já existe uma atribuição cadastrada com a mesmo nome,
+			if (repository.findByNomeAndIdNot(dto.getNome(), idAtribuicao).isPresent()) {
+				throw new ServiceException(HttpStatus.BAD_REQUEST,
+						"Já existe uma Atribuição cadastrada com esse nome: " + dto.getNome());
+			}
+
+			// Atualiza os dados da atribuição com os valores fornecidos no objeto
+			entity.setNome(dto.getNome());
+			entity.setSituacao(dto.getSituacao());
+			
+
+			// Salva a atribuição atualizada no repositório e a converte novamente para um
+			// objeto AtribuiçãoDTO.
+			return repository.save(entity).toDto(entity);
+		} catch (EntityNotFoundException e) {
+			// Se a atribuição não for encontrada no banco de dados, lança uma exceção com
+			// status HTTP 404 (Not Found).
+			throw new ServiceException(HttpStatus.NOT_FOUND, "Atribuição não encontrada: " + idAtribuicao);
+		}
+	}
+
+}

@@ -1,0 +1,145 @@
+package com.osvaldo.service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.osvaldo.dao.AtribuicaoCartorioRepository;
+import com.osvaldo.dto.AtribuicaoCartorioDTO;
+import com.osvaldo.dto.QueryParams;
+import com.osvaldo.dto.QueryResults;
+import com.osvaldo.entity.AtribuicaoCartorio;
+import com.osvaldo.exception.ServiceException;
+import org.springframework.data.domain.Sort;
+
+@Service
+public class AtribuicaoCartorioService {
+
+	@Autowired
+	private AtribuicaoCartorioRepository repository;
+
+	@Transactional(readOnly = true)
+	public QueryResults listar(QueryParams queryParams) {
+
+		PageRequest pageRequest = PageRequest.of(queryParams.getPageNumber(), queryParams.getPageSize(),
+				Sort.Direction.valueOf(queryParams.getSortOrder().toUpperCase()),
+				queryParams.getSortField().isEmpty() ? "nome" : queryParams.getSortField());
+
+		Page<AtribuicaoCartorio> atribuicaoCartorioPage = repository.listar(queryParams.getFilter(), pageRequest);
+
+		List<AtribuicaoCartorioDTO> atribuicaoCartorioList = atribuicaoCartorioPage.getContent().stream()
+				.map(c -> c.toDto(c)).collect(Collectors.toList());
+
+		return new QueryResults(atribuicaoCartorioList, atribuicaoCartorioPage.getTotalElements());
+	}
+
+	public AtribuicaoCartorioDTO save(AtribuicaoCartorioDTO dto) {
+
+		// Verifica se já existe uma atribuição cadastrada com o mesmo nome.
+		if (repository.findByNome(dto.getNome()).isPresent()) {
+			throw new ServiceException(HttpStatus.BAD_REQUEST,
+					"Já existe uma Atribuição cadastrada com esse nome: " + dto.getNome());
+		}
+
+		// Converte o objeto CompetenciaDTO para uma entidade Competencia.
+		AtribuicaoCartorio entity = dto.toEntity(dto);
+
+		// Salva a competência no repositório.
+		repository.save(entity);
+
+		// Retorna a competência salva, convertida novamente para um objeto
+		// CompetenciaDTO.
+		return entity.toDto(entity);
+	}
+
+	@Transactional
+	public AtribuicaoCartorioDTO update(AtribuicaoCartorioDTO dto, String idAtribuicao) throws ServiceException {
+		try {
+			// Obtém a entidade Competencia correspondente ao código de identificação
+			// fornecido.
+			@SuppressWarnings("deprecation")
+			AtribuicaoCartorio entity = repository.getById(idAtribuicao);
+
+			// Verifica se já existe uma atribuição cadastrada com a mesmo nome,
+			if (repository.findByNomeAndIdNot(dto.getNome(), idAtribuicao).isPresent()) {
+				throw new ServiceException(HttpStatus.BAD_REQUEST,
+						"Já existe uma Atribuição cadastrada com esse nome: " + dto.getNome());
+			}
+
+			// Atualiza os dados da atribuição com os valores fornecidos no objeto
+			entity.setNome(dto.getNome());
+			entity.setSituacao(dto.getSituacao());
+			
+
+			// Salva a atribuição atualizada no repositório e a converte novamente para um
+			// objeto AtribuiçãoDTO.
+			return repository.save(entity).toDto(entity);
+		} catch (EntityNotFoundException e) {
+			// Se a atribuição não for encontrada no banco de dados, lança uma exceção com
+			// status HTTP 404 (Not Found).
+			throw new ServiceException(HttpStatus.NOT_FOUND, "Atribuição não encontrada: " + idAtribuicao);
+		}
+	}
+	
+	@Transactional
+	public void delete(List<String> ids) throws ServiceException {
+		try {
+			ids.stream().forEach(id -> {
+				
+
+				// Verifica se há mais de uma competência a ser excluída e se alguma delas
+				// possui Contatos vinculados.
+				// Se sim, lança uma exceção de ServiceException informando que não é possível
+				// excluir as competências selecionadas.
+				if (ids.size() > 1 && findAtribuicaoUsada(id)) {
+					throw new ServiceException(HttpStatus.BAD_REQUEST,
+							"Não foi possível excluir as atribuções selecionadas pois há Cartórios vinculados");
+				}
+				// Caso haja apenas uma atrinuição a ser excluída e ela possuir um Cartório
+				// vinculado,
+				// lança uma exceção de ServiceException informando que não é possível excluir a
+				// atribuição selecionada.
+				else if (findAtribuicaoUsada(id)) {
+					throw new ServiceException(HttpStatus.BAD_REQUEST,
+							"Não foi possível excluir a atribuição selecionada pois há Cartóriod vinculados");
+				}
+
+				// Exclui a competência com o ID fornecido.
+				repository.deleteById(id);
+			});
+		} catch (IllegalArgumentException e) {
+			// Se a competência não for encontrada no banco de dados, lança uma exceção de
+			// ServiceException com status HTTP 404 (Not Found).
+			throw new ServiceException(HttpStatus.BAD_REQUEST, "Competência não encontrada: " + x);
+		}
+	}
+	@Transactional(readOnly = true)
+	public Boolean findAtribuicaoUsada(String codCompetencia) {
+		// Realiza a consulta no repositório de competências para verificar se a
+		// competência é utilizada por algum Contato.
+		// O método findCompetenciaUsada() provavelmente retorna um
+		// Optional<Competencia>.
+		Optional<AtribuicaoCartorio> entity = repository.findCompetenciaUsada(codCompetencia);
+
+		// Verifica se a competência foi encontrada no banco de dados (ou seja, está
+		// vinculada a pelo menos um Contato).
+		// Se sim, retorna true. Caso contrário, retorna false.
+		if (entity.isPresent()) {
+			return true;
+		}
+
+		return false;
+	}
+
+
+
+}

@@ -1,0 +1,46 @@
+package com.osvaldo.service;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import com.osvaldo.dao.AtribuicaoCartorioRepository;
+import com.osvaldo.dto.AtribuicaoCartorioDTO;
+import com.osvaldo.entity.AtribuicaoCartorio;
+import com.osvaldo.exception.ServiceException;
+
+@Service
+public class AtribuicaoCartorioService {
+
+	@Autowired
+	private static AtribuicaoCartorioRepository repository;
+	
+	@Transactional
+	public static AtribuicaoCartorioDTO save(AtribuicaoCartorioDTO dto) {
+
+		// Verifica se já existe uma atribuição cadastrada com o mesmo nome.
+		if (repository.findByNome(dto.getNome()).isPresent()) {
+			throw new ServiceException(HttpStatus.BAD_REQUEST,
+					"Já existe uma atribuição cadastrada com esse nome: " + dto.getNome());
+		}
+
+		// Converte o objeto CompetenciaDTO para uma entidade Competencia.
+		AtribuicaoCartorio entity = dto.toEntity(dto);
+
+		// Salva a competência no repositório.
+		
+		try {
+			repository.save(entity);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Retorna a competência salva, convertida novamente para um objeto
+		// CompetenciaDTO.
+		return entity.toDto(entity);
+	}
+
+}

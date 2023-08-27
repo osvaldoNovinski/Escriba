@@ -1,0 +1,39 @@
+package com.osvaldo.exception;
+
+import java.io.IOException;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+public class ControllerException extends ResponseEntityExceptionHandler {
+	@Autowired
+	private MessageSource msg;
+
+	private final static Logger LOGGER = LoggerFactory.getLogger(ControllerException.class.getName());
+
+	@ExceptionHandler(ServiceException.class)
+	public ResponseEntity<?> handleException(ServiceException se) {
+		String message = "";
+		if (se.getMessage() != null) {
+			message = msg.getMessage(se.getMessage(), new Object[] { se.getMessage() }, new Locale("pt_BR"));
+			LOGGER.info(message);
+		}
+		return new ResponseEntity<>(new RespostaException(message, se.getHttpStatus()), se.getHttpStatus());
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	public void constraintViolationException(HttpServletResponse response) throws IOException {
+		response.sendError(HttpStatus.BAD_REQUEST.value());
+	}
+
+}

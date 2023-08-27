@@ -1,0 +1,18 @@
+package entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name="SITUACAO_CARTORIO")
+public class SituacaoCartorio implements Serializable {
+	
+	@Id
+	private String id;
+	private String nome;
+	
+	
+
+}

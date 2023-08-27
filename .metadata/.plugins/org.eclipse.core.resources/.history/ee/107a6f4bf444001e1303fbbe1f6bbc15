@@ -1,0 +1,15 @@
+package com.osvaldo.dao;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.osvaldo.entity.AtribuicaoCartorio;
+
+@Repository
+public interface AtribuicaoCartorioRepository extends JpaRepository<AtribuicaoCartorio, String> {
+	
+	
+	Optional<AtribuicaoCartorio> findByNome(String nome);
+}

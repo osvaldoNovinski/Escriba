@@ -1,0 +1,10 @@
+INDEX VERSION 1.134+C:\workspace\escribaJava\.metadata\.plugins\org.eclipse.jdt.core
+343004488.index
+2836405354.index
+2674507994.index
+1865797976.index
+1542243578.index
+3308501558.index
+2494517855.index
+4109275621.index
+1585712730.index

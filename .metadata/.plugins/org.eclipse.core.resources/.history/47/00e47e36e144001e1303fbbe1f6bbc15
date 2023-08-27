@@ -1,0 +1,5 @@
+package com.osvaldo.exception;
+
+public class RespostaException {
+
+}

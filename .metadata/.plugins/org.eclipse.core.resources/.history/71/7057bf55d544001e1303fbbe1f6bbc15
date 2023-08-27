@@ -1,0 +1,7 @@
+package com.osvaldo.dao;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AtribuicaoCartorioRepository extends JpaRepository<AtribuicaoCartorio, String> {
+
+}
