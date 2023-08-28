@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import com.osvaldo.dto.SituacaoCartorioDTO;
 
 @Entity
-@Table(name = "SITUACAO_CARTORIO")
+@Table(name = "SITUACAO")
 public class SituacaoCartorio implements Serializable {
 
 	/**
@@ -70,6 +70,11 @@ public class SituacaoCartorio implements Serializable {
 		dto.setNome(entity.getNome());
 
 		return dto;
+	}
+
+	@Override
+	public String toString() {
+		return "SituacaoCartorio [id=" + id + ", nome=" + nome + "]";
 	}
 
 }

@@ -1,48 +1,54 @@
 package com.osvaldo.entity;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.osvaldo.dto.CartorioDTO;
 
 @Entity
 @Table(name = "CARTORIOS")
 public class Cartorio implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
 	private String observacao;
+	@ManyToOne
+	@JoinColumn(name = "SITUACAO_ID")
 	private SituacaoCartorio situacaoCartorio;
-	@OneToMany
-	@JoinColumn(name="id")
-	private List<AtribuicaoCartorio> atribuicoesCartorio;
+
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "cartorio_atribuicoes", joinColumns = @JoinColumn(name = "cartorio_id"), inverseJoinColumns = @JoinColumn(name = "atribuicao_id"))
+	private Set<AtribuicaoCartorio> atribuicoes = new HashSet<>();
 
 	public Cartorio() {
 		super();
 	}
 
+	public Cartorio(Long id) {
+		super();
+		this.id = id;
+	}
+
 	public Cartorio(Long id, String nome, String observacao, SituacaoCartorio situacaoCartorio,
-			List<AtribuicaoCartorio> atribuicoesCartorio) {
+			Set<AtribuicaoCartorio> atribuicoes) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.observacao = observacao;
 		this.situacaoCartorio = situacaoCartorio;
-		this.atribuicoesCartorio = atribuicoesCartorio;
+		this.atribuicoes = atribuicoes;
 	}
 
 	public Long getId() {
@@ -77,17 +83,9 @@ public class Cartorio implements Serializable {
 		this.situacaoCartorio = situacaoCartorio;
 	}
 
-	public List<AtribuicaoCartorio> getAtribuicoesCartorio() {
-		return atribuicoesCartorio;
-	}
-
-	public void setAtribuicoesCartorio(List<AtribuicaoCartorio> atribuicoesCartorio) {
-		this.atribuicoesCartorio = atribuicoesCartorio;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(atribuicoesCartorio, id, nome, observacao, situacaoCartorio);
+		return Objects.hash(atribuicoes, id, nome, observacao, situacaoCartorio);
 	}
 
 	@Override
@@ -99,9 +97,28 @@ public class Cartorio implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Cartorio other = (Cartorio) obj;
-		return Objects.equals(atribuicoesCartorio, other.atribuicoesCartorio) && Objects.equals(id, other.id)
+		return Objects.equals(atribuicoes, other.atribuicoes) && Objects.equals(id, other.id)
 				&& Objects.equals(nome, other.nome) && Objects.equals(observacao, other.observacao)
 				&& Objects.equals(situacaoCartorio, other.situacaoCartorio);
+	}
+
+	public Set<AtribuicaoCartorio> getAtribuicoes() {
+		return atribuicoes;
+	}
+
+	public void setAtribuicoes(Set<AtribuicaoCartorio> atribuicoes) {
+		this.atribuicoes = atribuicoes;
+	}
+
+	public CartorioDTO toDto(Cartorio entity) {
+		CartorioDTO dto = new CartorioDTO();
+		dto.setId(entity.getId());
+		dto.setNome(entity.getNome());
+		dto.setObservacao(entity.getObservacao());
+		dto.setSituacaoCartorio(entity.getSituacaoCartorio());
+		dto.setAtribuicoes(entity.getAtribuicoes());
+
+		return dto;
 	}
 
 }

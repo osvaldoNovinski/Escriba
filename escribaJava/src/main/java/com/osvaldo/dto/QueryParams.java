@@ -1,14 +1,13 @@
 package com.osvaldo.dto;
 
-import org.springframework.data.jpa.domain.JpaSort;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QueryParams {

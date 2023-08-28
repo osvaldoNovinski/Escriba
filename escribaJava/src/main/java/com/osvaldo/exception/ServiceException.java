@@ -2,7 +2,7 @@ package com.osvaldo.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class ServiceException extends RuntimeException{
+public class ServiceException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	private HttpStatus httpStatus = HttpStatus.PRECONDITION_FAILED;

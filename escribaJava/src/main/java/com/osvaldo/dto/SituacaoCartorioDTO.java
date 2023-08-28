@@ -3,14 +3,10 @@ package com.osvaldo.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Id;
-
 import com.osvaldo.entity.SituacaoCartorio;
 
 public class SituacaoCartorioDTO implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private String id;

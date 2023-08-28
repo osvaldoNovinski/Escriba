@@ -1,31 +1,36 @@
 package com.osvaldo.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.osvaldo.dto.AtribuicaoCartorioDTO;
-import com.osvaldo.dto.SituacaoCartorioDTO;
 
 @Entity
-@Table(name = "ATRIBUICAO_CARTORIO ")
+@Table(name = "ATRIBUICAO")
 public class AtribuicaoCartorio implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	private String id;
 	private String nome;
 	private Boolean situacao;
 
+	@ManyToMany(mappedBy = "atribuicoes")
+	private Set<Cartorio> cartorios = new HashSet<>();
+
 	public AtribuicaoCartorio() {
 		super();
+	}
+
+	public AtribuicaoCartorio(String id) {
+		super();
+		this.id = id;
 	}
 
 	public AtribuicaoCartorio(String id, String nome, Boolean situacao) {
@@ -76,7 +81,6 @@ public class AtribuicaoCartorio implements Serializable {
 		return Objects.equals(id, other.id) && Objects.equals(nome, other.nome)
 				&& Objects.equals(situacao, other.situacao);
 	}
-	
 
 	public AtribuicaoCartorioDTO toDto(AtribuicaoCartorio entity) {
 		AtribuicaoCartorioDTO dto = new AtribuicaoCartorioDTO();
@@ -85,6 +89,11 @@ public class AtribuicaoCartorio implements Serializable {
 		dto.setSituacao(entity.getSituacao());
 
 		return dto;
+	}
+
+	@Override
+	public String toString() {
+		return "AtribuicaoCartorio [id=" + id + ", nome=" + nome + ", situacao=" + situacao + "]";
 	}
 
 }
