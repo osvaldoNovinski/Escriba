@@ -2,6 +2,7 @@
 #ARG DOCKER_USERNAME=OsvaldoNovinski
 #ARG DOCKER_PASSWORD=Jh@137955
 
+# Changed the base image to maven which already includes the JDK needed to build the project
 FROM maven:3.6.3-jdk-11-slim
 
 # Set the working directory to /app
