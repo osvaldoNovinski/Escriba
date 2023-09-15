@@ -19,5 +19,5 @@ COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
 # Execute o aplicativo
-CMD ["java", "-jar", "/tmp/escribaJava.jar"]
+CMD ["java", "-jar", "/escribaJava.jar"]
 
