@@ -20,7 +20,9 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Create a new image with only the necessary files
-FROM openjdk:11
+
+# Changed the base image to openjdk:11-slim as it already includes the JDK needed to run the application
+FROM openjdk:11-slim
 
 # Set the working directory to /app
 WORKDIR /app
