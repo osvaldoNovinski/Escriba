@@ -1,5 +1,5 @@
 # Etapa 1: Construir o projeto
-FROM maven:3.10.1-openjdk-11-slim as builder
+FROM maven:3.8.1-jdk-11 as builder
 # Define o diretório de trabalho para /app
 WORKDIR /app
 # Copie o arquivo pom.xml para o diretório de trabalho
