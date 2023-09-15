@@ -1,34 +1,33 @@
-# Changed the base image to maven which already includes the JDK needed to build the project
-FROM maven:3.6.3-jdk-11-slim
+# Etapa 1: Construir o projeto
+FROM maven:3.6.3-jdk-11-slim as builder
 
-# Set the working directory to /app
+# Define o diretório de trabalho para /app
 WORKDIR /app
 
-# Copy the pom.xml file
+# Copie o arquivo pom.xml para o diretório de trabalho
 COPY pom.xml .
 
-# Download all the dependencies and cache them
+# Resolva as dependências e faça o cache delas
 RUN mvn dependency:resolve
 
-# Copy the project source code
+# Copie o código-fonte do projeto
 COPY src ./src
 
-# Build the project
+# Compile o projeto
 RUN mvn package -DskipTests
 
-# Create a new image with only the necessary files
-
-# Changed the base image to openjdk:11-slim as it already includes the JDK needed to run the application
+# Etapa 2: Preparar a imagem final
 FROM openjdk:11-slim
 
-# Set the working directory to /app
+# Define o diretório de trabalho para /app
 WORKDIR /app
 
-# Copy the JAR file from the previous image
-COPY --from=0 /app/target/escribaJava.jar /escribaJava.jar
+# Copie o JAR gerado da etapa anterior
+COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
-# Expose port 8080
+# Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
 
-# Run the application
+# Execute o aplicativo
 CMD ["java", "-jar", "/escribaJava.jar"]
+
