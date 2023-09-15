@@ -14,9 +14,10 @@ FROM maven:3.8.1-jdk-11 as builder
 # Etapa 2: Preparar a imagem final
 FROM openjdk:11-slim
 # Define o diretório de trabalho para /app
-WORKDIR /app
+WORKDIR /escribaJava2
 # Copie o JAR gerado da etapa anterior
-COPY --from=builder /escribaJava/target/escribaJava.jar /app/target/escribaJava.jar
+#COPY --from=builder /escribaJava/target/escribaJava.jar /app/target/escribaJava.jar
+COPY /escribaJava/target/escribaJava.jar /escribaJava2/target/escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
