@@ -15,9 +15,9 @@ FROM openjdk:11-slim
 # Define o diretório de trabalho para /app
 #WORKDIR /escribaJava
 # Copie o JAR gerado da etapa anterior
-COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
+COPY --from=builder /app/target/escribaJava.jar /tmp/escribaJava.jar
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
 # Execute o aplicativo
-CMD ["java", "-jar", "/escribaJava.jar"]
+CMD ["java", "-jar", "/tmp/escribaJava.jar"]
 
