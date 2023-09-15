@@ -16,6 +16,7 @@
 	<description>Projeto feito em java openJdk 11, utilizando FlyWay</description>
 	<properties>
 		<java.version>11</java.version>
+		<spotify.docker-maven-plugin.version>1.2.0</spotify.docker-maven-plugin.version>
 		<flyway.user>sa</flyway.user>
 		<flyway.password></flyway.password>
 		<flyway.schemas>schemaName</flyway.schemas>
@@ -87,6 +88,27 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>build-docker</id>
+			<build>
+				<finalName>${project.artifactId}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>${spotify.docker-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id></id>
+							</execution>
+						</executions>
+					
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
