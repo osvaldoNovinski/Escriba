@@ -20,7 +20,7 @@ COPY --from=builder /app/target/escribaJava.jar /app/target/escribaJava.jar
 #COPY /app/target/escribaJava.jar /app/target/escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
-EXPOSE 8080
+EXPOSE 8081
 # Execute o aplicativo
 CMD ["java", "-jar", "/escribaJava.jar"]
 
