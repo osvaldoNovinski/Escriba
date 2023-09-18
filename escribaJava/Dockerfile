@@ -3,10 +3,10 @@
 FROM maven:3.8.1-jdk-11 as builder
 
 # Define o diretório de trabalho para /app
-WORKDIR /app
+#WORKDIR /app
 
 # Copie o arquivo pom.xml para o diretório de trabalho
-COPY pom.xml .
+COPY pom.xml pom.xml
 #COPY . .
 
 # Resolva as dependências e faça o cache delas
