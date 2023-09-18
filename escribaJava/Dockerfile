@@ -26,7 +26,6 @@ FROM openjdk:11-slim
 #COPY . /app
 WORKDIR /app
 
-RUN ls
 
 # Define o diretório de trabalho para /app
 #WORKDIR /escribaJava
@@ -35,7 +34,7 @@ RUN ls
 #COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
 
-COPY --from=builder escribaJava.jar escribaJava.jar
+ADD --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
