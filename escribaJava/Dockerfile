@@ -30,6 +30,6 @@ COPY --from=builder /app/target/escribaJava.jar /app/target/escribaJava.jar
 EXPOSE 8080
 
 # Execute o aplicativo
-CMD ["java", "-jar", "/app/target/escribaJava.jar"]
+#CMD ["java", "-jar", "/app/target/escribaJava.jar"]
 
 
