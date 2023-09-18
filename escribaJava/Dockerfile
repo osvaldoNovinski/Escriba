@@ -6,7 +6,7 @@ FROM maven:3.8.1-jdk-11 as builder
 #WORKDIR /app
 
 # Copie o arquivo pom.xml para o diretório de trabalho
-COPY pom.xml pom.xml
+COPY pom.xml ./pom.xml
 #COPY . .
 
 # Resolva as dependências e faça o cache delas
@@ -31,10 +31,10 @@ WORKDIR /app
 # Copie o JAR gerado da etapa anterior
 #COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
-#COPY --from=builder app/target/escribaJava.jar /escribaJava.jar
+COPY --from=builder app/target/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
-EXPOSE 8080
+EXPOSE 8059
 
 # Execute o aplicativo
 CMD ["java", "-jar", "/escribaJava.jar"]
