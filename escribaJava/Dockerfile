@@ -16,7 +16,9 @@ RUN mvn dependency:resolve
 # Copie o código-fonte do projeto
 COPY src ./src
 
-RUN ls /app/
+COPY target ./target
+
+RUN ls /app
 
 # Compile o projeto
 RUN mvn package -DskipTests
