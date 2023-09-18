@@ -3,7 +3,7 @@
 FROM maven:3.8.1-jdk-11 as builder
 
 # Define o diretório de trabalho para /app
-#WORKDIR /app
+#WORKDIR /escribaJava
 
 # Copie o arquivo pom.xml para o diretório de trabalho
 COPY pom.xml ./pom.xml
@@ -26,12 +26,13 @@ FROM openjdk:11-slim
 #WORKDIR /app
 
 # Define o diretório de trabalho para /app
-WORKDIR /app
+WORKDIR /escribaJava
 
 # Copie o JAR gerado da etapa anterior
-#COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
+#COPY --from=builder /escribaJava/target/escribaJava.jar /escribaJava.jar
 
-COPY --from=builder app/target/escribaJava.jar /escribaJava.jar
+
+COPY --from=builder escribaJava/target/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8059
