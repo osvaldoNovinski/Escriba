@@ -20,11 +20,11 @@ RUN mvn package -DskipTests
 # Etapa 2: Preparar a imagem final
 FROM openjdk:11-slim
 
-COPY . /usr/src/myapp
-WORKDIR /usr/src/myapp
+COPY . /app
+WORKDIR /app
 
 # Define o diretório de trabalho para /app
-WORKDIR /app
+#WORKDIR /app
 
 # Copie o JAR gerado da etapa anterior
 COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
