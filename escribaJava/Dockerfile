@@ -16,7 +16,7 @@ COPY src ./src
 
 # Compile o projeto
 RUN mvn package -DskipTests
-
+ls
 # Etapa 2: Preparar a imagem final
 FROM openjdk:11-slim
 
