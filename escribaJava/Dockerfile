@@ -26,7 +26,7 @@ FROM openjdk:11-slim
 #WORKDIR /app
 
 # Define o diretório de trabalho para /app
-WORKDIR /escribaJava
+#WORKDIR /escribaJava
 
 # Copie o JAR gerado da etapa anterior
 #COPY --from=builder /escribaJava/target/escribaJava.jar /escribaJava.jar
