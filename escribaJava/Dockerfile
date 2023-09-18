@@ -24,7 +24,7 @@ FROM openjdk:11-slim
 WORKDIR /app
 
 # Copie o JAR gerado da etapa anterior
-COPY --from=builder /app/escribaJava.jar /escribaJava.jar
+COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
