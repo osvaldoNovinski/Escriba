@@ -18,7 +18,8 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Etapa 2: Preparar a imagem final
-FROM openjdk:11-slim
+FROM adoptopenjdk/openjdk11:alpine
+#FROM openjdk:11-slim
 
 COPY . /app
 WORKDIR /app
