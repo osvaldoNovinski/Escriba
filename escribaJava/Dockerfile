@@ -18,7 +18,7 @@ COPY src ./src
 
 COPY target ./target
 
-RUN ls /app
+RUN ls /app/target
 
 # Compile o projeto
 RUN mvn package -DskipTests
@@ -43,7 +43,7 @@ COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 RUN ls /
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
-EXPOSE 8080
+EXPOSE 9564
 
 # Execute o aplicativo
 CMD ["java", "-jar", "/escribaJava.jar"]
