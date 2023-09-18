@@ -3,7 +3,7 @@
 FROM maven:3.8.1-jdk-11 as builder
 
 # Define o diretório de trabalho para /app
-#WORKDIR /escribaJava
+WORKDIR /app
 
 # Copie o arquivo pom.xml para o diretório de trabalho
 COPY pom.xml ./pom.xml
@@ -23,7 +23,7 @@ RUN mvn package -DskipTests
 FROM openjdk:11-slim
 
 #COPY . /app
-#WORKDIR /app
+WORKDIR /escribaJava
 
 # Define o diretório de trabalho para /app
 #WORKDIR /escribaJava
@@ -35,7 +35,7 @@ FROM openjdk:11-slim
 COPY --from=builder /escribaJava/target/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
-EXPOSE 8059
+EXPOSE 8080
 
 # Execute o aplicativo
 CMD ["java", "-jar", "/escribaJava.jar"]
