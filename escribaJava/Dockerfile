@@ -23,16 +23,16 @@ RUN mvn package -DskipTests
 FROM openjdk:11-slim
 
 #COPY . /app
-WORKDIR /escribaJava
+WORKDIR /app
 
 # Define o diretório de trabalho para /app
 #WORKDIR /escribaJava
 
 # Copie o JAR gerado da etapa anterior
-#COPY --from=builder /escribaJava/target/escribaJava.jar /escribaJava.jar
+#COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
 
-COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
+COPY --from=builder /app/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
