@@ -2,6 +2,8 @@
 #FROM maven:3.8.1-jdk-11 as builder
 FROM maven:3.6.3-jdk-11-slim as builder
 # Define o diretório de trabalho para /app
+MKDIR app
+CD /app
 #WORKDIR /app
 # Copie o arquivo pom.xml para o diretório de trabalho
 COPY pom.xml .
