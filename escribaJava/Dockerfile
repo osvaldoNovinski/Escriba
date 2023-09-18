@@ -6,13 +6,14 @@ FROM maven:3.8.1-jdk-11 as builder
 WORKDIR /app
 
 # Copie o arquivo pom.xml para o diretório de trabalho
-COPY pom.xml .
+#COPY pom.xml .
+COPY . .
 
 # Resolva as dependências e faça o cache delas
 RUN mvn dependency:resolve
 
 # Copie o código-fonte do projeto
-COPY src ./src
+#COPY src ./src
 
 # Compile o projeto
 RUN mvn package -DskipTests
@@ -28,7 +29,7 @@ FROM adoptopenjdk/openjdk11:alpine
 WORKDIR /app
 
 # Copie o JAR gerado da etapa anterior
-COPY --from=builder ../../escribaJava.jar /escribaJava.jar
+COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
