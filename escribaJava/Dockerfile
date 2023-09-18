@@ -24,7 +24,9 @@ RUN mvn package -DskipTests
 FROM openjdk:11-slim
 
 #COPY . /app
-WORKDIR /0
+WORKDIR /app
+
+RUN ls
 
 # Define o diretório de trabalho para /app
 #WORKDIR /escribaJava
