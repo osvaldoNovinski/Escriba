@@ -34,7 +34,7 @@ WORKDIR /app
 #COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
 
-ADD --from=builder /app/target/escribaJava.jar /escribaJava.jar
+copy --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
