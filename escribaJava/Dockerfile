@@ -16,7 +16,7 @@ RUN mvn dependency:resolve
 # Copie o código-fonte do projeto
 COPY src ./src
 
-RUN ls /app/target
+RUN ls /
 
 # Compile o projeto
 RUN mvn package -DskipTests
@@ -38,7 +38,7 @@ WORKDIR /app
 
 COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
 
-RUN ls /app
+RUN ls /
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
