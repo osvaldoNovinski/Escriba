@@ -21,11 +21,11 @@ RUN mvn package -DskipTests
 FROM adoptopenjdk/openjdk11:alpine
 #FROM openjdk:11-slim
 
-COPY . /app
-WORKDIR /app
+#COPY . /app
+#WORKDIR /app
 
 # Define o diretório de trabalho para /app
-#WORKDIR /app
+WORKDIR /app
 
 # Copie o JAR gerado da etapa anterior
 COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
