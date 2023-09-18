@@ -19,8 +19,8 @@ RUN mvn dependency:resolve
 RUN mvn package -DskipTests
 
 # Etapa 2: Preparar a imagem final
-FROM adoptopenjdk/openjdk11:alpine
-#FROM openjdk:11-slim
+#FROM adoptopenjdk/openjdk11:alpine
+FROM openjdk:11-slim
 
 #COPY . /app
 #WORKDIR /app
@@ -29,7 +29,9 @@ FROM adoptopenjdk/openjdk11:alpine
 WORKDIR /app
 
 # Copie o JAR gerado da etapa anterior
-COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
+#COPY --from=builder /app/target/escribaJava.jar /escribaJava.jar
+
+COPY --from=builder . .
 
 # Exponha a porta 8080 (se o aplicativo usar essa porta)
 EXPOSE 8080
