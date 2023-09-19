@@ -17,7 +17,7 @@ RUN mvn dependency:resolve
 COPY src ./src
 
 COPY target ./target
-
+RUN clean package -P build-docker 
 RUN ls /app/target
 
 # Compile o projeto
