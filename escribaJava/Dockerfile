@@ -17,11 +17,12 @@ RUN mvn dependency:resolve
 COPY src ./src
 
 COPY target ./target
-RUN clean package -P build-docker 
-RUN ls /app/target
 
 # Compile o projeto
 RUN mvn package -DskipTests
+
+RUN clean package -P build-docker 
+RUN ls /app/target
 
 # Etapa 2: Preparar a imagem final
 #FROM adoptopenjdk/openjdk11:alpine
@@ -29,7 +30,6 @@ FROM openjdk:11-slim
 
 #COPY . /app
 WORKDIR /app
-
 
 # Define o diretório de trabalho para /app
 #WORKDIR /escribaJava
