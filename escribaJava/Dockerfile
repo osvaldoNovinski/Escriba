@@ -21,7 +21,7 @@ COPY target ./target
 # Compile o projeto
 RUN mvn package -DskipTests
 
-RUN clean package -P build-docker 
+RUN mvn clean package -P build-docker 
 RUN ls /app/target
 
 # Etapa 2: Preparar a imagem final
